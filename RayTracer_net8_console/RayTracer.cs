@@ -10,9 +10,9 @@ internal class Program
         var image = new Image(500, 500);
         Stopwatch sw = new Stopwatch();
         sw.Start();
-        var rayTracer = new RayTracerEngine();
         var scene = new Scene();
-        rayTracer.Render(scene, image);
+        var rayTracer = new RayTracerEngine(scene);
+        rayTracer.Render(image);
         sw.Stop();
         image.Save("csharp-ray.bmp");
         Console.WriteLine("Completed in " + sw.ElapsedMilliseconds.ToString() + " ms");
@@ -421,6 +421,11 @@ internal class RayTracerEngine
     private const int maxDepth = 5;
     private Scene scene;
 
+    public RayTracerEngine(Scene scene)
+    {
+        this.scene = scene;
+    }
+
     private Intersection Intersections(Ray ray)
     {
         var closest = double.PositiveInfinity;
@@ -495,9 +500,8 @@ internal class RayTracerEngine
         }
     }
 
-    public void Render(Scene scene, Image image)
+    public void Render(Image image)
     {
-        this.scene = scene;
         int w = image.Width;
         int h = image.Height;
         Ray ray = new Ray(scene.Camera.Pos, new Vector(0, 0, 0));
